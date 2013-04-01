@@ -52,6 +52,7 @@ import android.util.Log;
  * @hide
  */
 public class MediaSource extends Filter {
+    public static final boolean MISSING_EGL_EXTERNAL_IMAGE=true;
 
     /** User-visible parameters */
 
@@ -126,6 +127,14 @@ public class MediaSource extends Filter {
             "void main() {\n" +
             "  gl_FragColor = texture2D(tex_sampler_0, v_texcoord);\n" +
             "}\n";
+    private final String mFrameShader2D =
+            "#extension GL_OES_EGL_image_external : require\n" +
+            "precision mediump float;\n" +
+            "uniform sampler2D tex_sampler_0;\n" +
+            "varying vec2 v_texcoord;\n" +
+            "void main() {\n" +
+            "  gl_FragColor = texture2D(tex_sampler_0, v_texcoord);\n" +
+            "}\n";
 
     // The following transforms enable rotation of the decoded source.
     // These are multiplied with the transform obtained from the
@@ -192,7 +201,7 @@ public class MediaSource extends Filter {
     protected void prepare(FilterContext context) {
         if (mLogVerbose) Log.v(TAG, "Preparing MediaSource");
 
-        mFrameExtractor = new ShaderProgram(context, mFrameShader);
+        mFrameExtractor = new ShaderProgram(context, MISSING_EGL_EXTERNAL_IMAGE?mFrameShader2D:mFrameShader);
         // SurfaceTexture defines (0,0) to be bottom-left. The filter framework
         // defines (0,0) as top-left, so do the flip here.
         mFrameExtractor.setSourceRect(0, 1, 1, -1);

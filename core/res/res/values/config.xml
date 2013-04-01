@@ -1134,4 +1134,10 @@
 
     <!-- True if the Sym key should open the InputMethodPicker (default) -->
     <bool name="config_symKeyShowsImePicker">true</bool>
+    <!-- Possible names from /devices/virtual/switch/dock for a dock device.
+         Some kernels use names like CAR and DESK. -->
+    <string-array translatable="false" name="config_accessoryDockNames">
+        <item>"CAR"</item>
+        <item>"DESK"</item>
+    </string-array>
 </resources>
