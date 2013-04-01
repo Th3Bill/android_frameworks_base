@@ -158,7 +158,11 @@ const char* gFS_Header_Uniforms_PointHasBitmap =
 const char* gFS_Uniforms_TextureSampler =
         "uniform sampler2D baseSampler;\n";
 const char* gFS_Uniforms_ExternalTextureSampler =
+#ifdef MISSING_EGL_EXTERNAL_IMAGE
+        "uniform sampler2D baseSampler;\n";
+#else
         "uniform samplerExternalOES baseSampler;\n";
+#endif
 #define FS_UNIFORMS_DITHER \
         "uniform float ditherSizeSquared;\n" \
         "uniform sampler2D ditherSampler;\n"

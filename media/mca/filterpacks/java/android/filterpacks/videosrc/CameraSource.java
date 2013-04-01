@@ -47,6 +47,7 @@ import android.util.Log;
  * @hide
  */
 public class CameraSource extends Filter {
+    public static final boolean MISSING_EGL_EXTERNAL_IMAGE=true;
 
     /** User-visible parameters */
 
@@ -104,6 +105,14 @@ public class CameraSource extends Filter {
             "void main() {\n" +
             "  gl_FragColor = texture2D(tex_sampler_0, v_texcoord);\n" +
             "}\n";
+    private static final String mFrameShader2D =
+            "#extension GL_OES_EGL_image_external : require\n" +
+            "precision mediump float;\n" +
+            "uniform sampler2D tex_sampler_0;\n" +
+            "varying vec2 v_texcoord;\n" +
+            "void main() {\n" +
+            "  gl_FragColor = texture2D(tex_sampler_0, v_texcoord);\n" +
+            "}\n";
 
     private final boolean mLogVerbose;
     private static final String TAG = "CameraSource";
@@ -133,7 +142,7 @@ public class CameraSource extends Filter {
     public void prepare(FilterContext context) {
         if (mLogVerbose) Log.v(TAG, "Preparing");
         // Compile shader TODO: Move to onGLEnvSomething?
-        mFrameExtractor = new ShaderProgram(context, mFrameShader);
+        mFrameExtractor = new ShaderProgram(context, MISSING_EGL_EXTERNAL_IMAGE?mFrameShader2D:mFrameShader);
     }
 
     @Override

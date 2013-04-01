@@ -60,6 +60,7 @@ import android.util.Log;
  * @hide
  */
 public class SurfaceTextureSource extends Filter {
+    public static final boolean MISSING_EGL_EXTERNAL_IMAGE=true;
 
     /** User-visible parameters */
 
@@ -135,6 +136,14 @@ public class SurfaceTextureSource extends Filter {
             "void main() {\n" +
             "  gl_FragColor = texture2D(tex_sampler_0, v_texcoord);\n" +
             "}\n";
+    private final String mRenderShader2D =
+            "#extension GL_OES_EGL_image_external : require\n" +
+            "precision mediump float;\n" +
+            "uniform sampler2D tex_sampler_0;\n" +
+            "varying vec2 v_texcoord;\n" +
+            "void main() {\n" +
+            "  gl_FragColor = texture2D(tex_sampler_0, v_texcoord);\n" +
+            "}\n";
 
     // Variables for logging
 
@@ -173,7 +182,7 @@ public class SurfaceTextureSource extends Filter {
                                                                        0);
 
         // Prepare output
-        mFrameExtractor = new ShaderProgram(context, mRenderShader);
+        mFrameExtractor = new ShaderProgram(context, MISSING_EGL_EXTERNAL_IMAGE?mRenderShader2D:mRenderShader);
     }
 
     @Override
